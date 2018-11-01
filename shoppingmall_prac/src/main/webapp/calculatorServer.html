@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>미션) 계산기</title>
+</head>
+<body>
+  <input type="number" name="num1" id="num1">
+  <select name="operator" id="operator">
+    <option>+</option>
+    <option>-</option>
+    <option>*</option>
+    <option>/</option>
+  </select>
+  <input type="number" name="num2" id="num2">
+  <span id="output"></span>
+  <input type="button" id="result" value="결과보기">
+</body>
+<script type="text/javascript">
+	result.addEventListener("click", clickButton);
+	function clickButton() {
+		var num1 = parseInt(document.getElementById("num1").value);
+		var operator = document.getElementById("operator").selectedIndex;
+		var num2 = parseInt(document.getElementById("num2").value);
+		var url = 'calculator.jsp?num1='+num1+'&operator='+operator+'&num2='+num2;
+		setResult(url);
+	}
+	function setResult(url){
+		var span = document.getElementById("output");
+		span.innerHTML = '<iframe style="width:40px; height: 40px;" src='+url+'></iframe>';
+		/* innerContext : <tag>포함 모든 내용
+		   innerHTML : <tag> 제외 안의 text */
+	}
+</script>
+</html>

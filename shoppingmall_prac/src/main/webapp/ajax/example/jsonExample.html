@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+<script type="text/javascript">
+/* 일반 객체 */
+var object = {
+	name : "서지원",
+	age : 25,
+	flag : true
+}; //new Object();
+console.log(object.name);
+console.log(object["age"]);
+console.log(object.flag);
+/* 일반 배열 */
+//var array = new Array();
+var array = ["서지원","조희진",object, Math, new Date()];
+for ( var i in array) {
+	console.log(array[i].constructor);
+}
+/* json text : string 타입처럼 보이는 Object*/
+var text = '{"name" : "서지원",	"age" : 25,	"flag" : true }';
+console.log(typeof text); // 있는 그대로 나옴 : string
+/* json형식으로 바꿔줌 */
+var text2 = JSON.stringify(object); 
+var text3 = JSON.stringify(array);
+// alert(text3);
+/* json형식을 다시 객체형식으로 */
+var person = JSON.parse(text2);
+alert(person.name+" , "+person.age+" , "+person.flag); 
+
+
+</script>
+</body>
+</html>

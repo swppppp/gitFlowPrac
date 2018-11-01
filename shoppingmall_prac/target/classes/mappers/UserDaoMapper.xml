@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.or.kosta.shoppingmall.user">
+	<insert id="create" parameterType="User">
+		INSERT INTO users
+		VALUES
+		(#{id},
+		#{name},
+		#{passwd},
+		#{email},
+		sysdate)
+	</insert>
+	<select id="read" parameterType="String" resultType="User">
+		SELECT id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM users
+		WHERE id = #{value}
+	</select>
+	<update id="update" parameterType="User">
+		UPDATE users
+		SET passwd =
+		#{passwd}, email = #{email}
+		WHERE id = #{id}
+	</update>
+	<delete id="delete" parameterType="string">
+		DELETE FROM users
+		WHERE id =
+		#{value}
+	</delete>
+	<select id="listAll" resultType="User">
+		SELECT id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM users
+	</select>
+	<select id="certify" resultType="User" parameterType="map">
+		SELECT id,
+		NAME,
+		passwd,
+		email,
+		To_char(regdate, 'YYYY"년" MM"월" DD"일" DAY')regdate
+		FROM users
+		WHERE id = #{id}
+		AND passwd = #{passwd}
+	</select>
+
+
+	<select id="listByPage1" parameterType="int" resultType="User">
+		SELECT
+		id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM (SELECT Ceil(rownum / 10)
+		request_page,
+		id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM (SELECT id,
+		NAME,
+		passwd,
+		email,
+		To_char(regdate, 'YYYY-MM-DD HH24:MI') regdate
+		FROM users
+		ORDER BY
+		regdate DESC))
+		WHERE request_page = #{value}
+	</select>
+	<select id="listByPage2" parameterType="map" resultType="User">
+		SELECT
+		id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM (SELECT Ceil(rownum / #{listSize})
+		request_page,
+		id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM (SELECT id,
+		NAME,
+		passwd,
+		email,
+		To_char(regdate, 'YYYY-MM-DD HH24:MI') regdate
+		FROM users
+		ORDER BY
+		regdate DESC))
+		WHERE request_page = #{page}
+	</select>
+	<!-- 성(last_name)으로 사원 검색(와일드카드 검색) -->
+	<select id="selectEmployeesByLastName" parameterType="string"
+		resultType="Employee">
+		SELECT employee_id "id",
+		first_name "firstName",
+		last_name
+		"lastName",
+		email "email",
+		phone_number "phoneNumber",
+		TO_CHAR(hire_date, 'YYYY-MM-DD') "hireDate",
+		salary "salary"
+		FROM
+		employees
+		WHERE UPPER(last_name) LIKE #{lastName}
+	</select>
+	<select id="listByPageBySearch" parameterType="map"
+		resultType="User">
+		SELECT id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM (SELECT Ceil(rownum /
+		#{listSize}) request_page,
+		id,
+		NAME,
+		passwd,
+		email,
+		regdate
+		FROM (SELECT id,
+		NAME,
+		passwd,
+		email,
+		To_char(regdate, 'YYYY-MM-DD HH24:MI') regdate
+		FROM
+		users
+		<if test="searchType != null">
+			<choose>
+				<when test="searchType == 'id'">
+					WHERE id = #{searchValue}
+				</when>
+				<when test="searchType == 'name'">
+					WHERE name like '%'||#{searchValue}||'%'
+				</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY regdate DESC))
+		WHERE request_page = #{page}
+	</select>
+	<select id="countBySearch" parameterType="map" resultType="int">
+		SELECT Count(id) count
+		FROM users
+		<if test="searchType != null">
+			<choose>
+				<when test="searchType == 'id'">
+					WHERE id = #{searchValue}
+				</when>
+				<when test="searchType == 'name'">
+					WHERE name like '%'||#{searchValue}||'%'
+				</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+	</select>
+</mapper>
