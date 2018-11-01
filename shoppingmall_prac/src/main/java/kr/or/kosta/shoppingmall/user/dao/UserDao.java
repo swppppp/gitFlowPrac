@@ -1,8 +1,6 @@
 package kr.or.kosta.shoppingmall.user.dao;
 
 import java.util.List;
-import java.util.Map;
-
 import kr.or.kosta.shoppingmall.common.web.Params;
 import kr.or.kosta.shoppingmall.user.domain.User;
 
